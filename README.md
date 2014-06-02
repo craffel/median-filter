@@ -1,7 +1,7 @@
 median-filter
 =============
 
-A fast 1d median filter, for filtering the rows and columns of a matrix.
+A fast 1d median filter, for filtering the rows and columns of a matrix.  Requires swig
 
 Install with 
 
