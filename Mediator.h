@@ -10,13 +10,12 @@ template <typename Item> class Mediator
 {
 public:
   
-  Mediator( int nItems )
+  Mediator(int nItems ):N(nItems)
   {
     data = new Item[nItems];
     pos = new int[nItems];
     allocatedHeap = new int[nItems]; 
     heap = allocatedHeap + (nItems/2);
-    N = nItems;
     minCt = maxCt = idx = 0;
     // Set up initial heap fill pattern: median, max, min, max, ...
     while (nItems--)
@@ -28,16 +27,16 @@ public:
   
   ~Mediator()
   {
-    delete data;
-    delete pos;
-    delete allocatedHeap;
+    delete[] data;
+    delete[] pos;
+    delete[] allocatedHeap;
   };
   
   // Inserts item, maintains median in O(lg nItems)
-  void insert( Item v )
+  void insert(const Item& v )
   {
-    int p = pos[idx];
-    Item old = data[idx];
+    const int p = pos[idx];
+    const Item old = data[idx];
     data[idx] = v;
     idx = (idx+1) % N;
     // New item is in minheap
@@ -102,7 +101,7 @@ public:
 private:
   
   // Swaps items i&j in heap, maintains indexes
-  int mmexchange( int i, int j )
+  int mmexchange(const int i,const int j )
   {
     int t = heap[i];
     heap[i] = heap[j];
@@ -145,13 +144,13 @@ private:
   };
   
   // Returns 1 if heap[i] < heap[j]
-  inline int mmless( int i, int j )
+  inline int mmless(const int i,const int j )
   {
     return (data[heap[i]] < data[heap[j]]);
   };
   
   // Swaps items i&j if i<j; returns true if swapped
-  inline int mmCmpExch( int i, int j )
+  inline int mmCmpExch(const int i,const int j )
   {
     return (mmless( i, j ) && mmexchange( i, j ));
   };
@@ -177,7 +176,8 @@ private:
     }
     return ( i==0 );
   };
-
+  // Allocated size
+  const int N;
   // Circular queue of values
   Item* data;
   // Index into `heap` for each value
@@ -186,8 +186,6 @@ private:
   int* heap;
   // heap holds a pointer to the middle of its data; this is where the data is allocated.
   int* allocatedHeap;
-  // Allocated size
-  int N;
   // Position in circular queue
   int idx; 
   // Count of items in min heap
